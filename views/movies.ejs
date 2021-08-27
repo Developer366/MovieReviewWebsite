@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/movies.css">
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+
+    <title>Movies list</title>
+</head>
+<body>
+    <h1>List of all movies:</h1>
+    <h2><%= 4+5 +5 %></h2>
+    <h2><%= 'hello worldssds'.toUpperCase()  %> </h2>
+
+
+    <table border="1">
+        <tr>
+            <th>Movie Name</th>
+            <th>Release Year</th>
+            <th>Director</th>
+            <th>Rate</th>
+        </tr>
+        <tr>
+            <% for(var i=0; i<result.length; i++){ %>
+              <td><%= result[i]['movie_name']  %> </td>
+              <td><%= result[i]['movie_year']  %> </td>
+              <td><%= result[i]['director'] %></td>
+              <td><a href="rate">Rate</a> </td>
+          </tr>
+           <% }%>
+    </table>
+      
+    <div class="modal-container">
+        <h1>Rate Modal</h1> 
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem aut cum corrupti nobis rerum eveniet, nulla, iure in debitis suscipit pariatur, reprehenderit voluptates molestiae. Labore non dolorem quo sunt sequi.
+        Porro dolor fugit fuga, corrupti veritatis quaerat hic voluptatibus in consequuntur delectus dignissimos esse omnis, nesciunt cum. Tenetur voluptatum modi fugiat, magnam tempora reiciendis ut praesentium quas ullam temporibus laboriosam.</p>   
+        <form action="/">
+            <label for="rate">Choose your movie score:</label>
+            <select name="mrate" id="mrate">
+              <option value="10">10</option>
+              <option value="9.5">9.5</option>
+              <option value="9">9</option>
+              <option value="8.5">8.5</option>
+              <option value="8">8</option>
+              <option value="7.5">7.5</option>
+              <option value="7">7</option>
+              <option value="6.5">6.5</option>
+              <option value="6">6</option>
+              <option value="5.5">5.5</option>
+              <option value="5">5</option>
+              <option value="4.5">4.5</option>
+              <option value="4">4</option>
+            </select>
+            <br><br>
+            <input type="submit" value="Submit">
+          </form>
+    </div>
+    <!----
+        <ul>
+            <% for(var i=0; i<result.length; i++) {%>
+               <li><%= result[i]['movie_name'] %></li>
+            <% } %>
+        </ul>
+    -->
+
+</body>
+</html>

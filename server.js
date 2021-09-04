@@ -7,6 +7,8 @@ let bodyParser = require("body-parser");
 const bcrypt = require("bcrypt"); //hash your password
 const session = require("express-session");
 const flash = require("flash");
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
 //const hbs = require('express-handlebars');
 
 const app = express(); //Creates Express application
@@ -34,6 +36,7 @@ const db = mysql.createConnection({
 	password: "password1234",
 	database: "review_db",
 });
+
 db.connect((err) => {
 	//check if database connection is successful or there is an error
 	if (err) {
@@ -43,72 +46,56 @@ db.connect((err) => {
 	console.log("Database successfully Connected!! =)");
 });
 
-//LOGIN, Logout AND RESGISETER ROUTES GET AND POST///////////////////////////
+//LOGIN, Logout AND RESGISETER ROUTES GET AND POST------------------------------------
 app.get("/login", (req, res) => {
-	//home page or First Page
 	res.render("login.ejs");
 });
-/*
-app.post("/login", async (req, res) => {
-      console.log(req.body);
-	//route for login and authentication
-	const { username, password } = req.body;
+app.post("/login", (req, res) => {
+	res.render("login.ejs");
+});
 
-	//if (username && password) {
-		//let sql = `SELECT * FROM user WHERE username = ? AND password = ?';
-            db.query(`SELECT email FROM user WHERE username = ? AND password = ?`, [username,password ], (error, results) =>{
-                  if(error) {
-                        console.log(error);
-                  } 
-                  if (results.length > 0) {
-                        return res.render('register', {message: 'That email is already in use!'})
-                  } else if( password !== passwordConfirm ) {
-                        return res.render('register', {
-                              message: 'Passwords do not match'
-                        });
-                  };
-            })
-
-		//let query = db.query(sql, (err, result) => {
-			//if (err) throw err;
-			//console.log(result);
-			//res.render("movies.ejs", { result });
-		//});
-	//}
-//});
-*/
-
+app.get("/register", async (req, res)=> {
+	res.render("register");
+});
 app.post("/register", async (req, res) => {
 	const { name, username, password } = req.body;
 	const hash = await bcrypt.hash(password, 12);
-	//const user =
 });
 
-//route to print all movies in the database
-app.get("/", (req, res) => {
-	var movies = "SELECT * FROM movies"; //select all movies
-	db.query(movies, function (err, result, fields) {
-		//WHERE movie_name = 'The Avengers'
+// list movies and get movies 
+app.get("/", (req, res) => {//route to print all movies in the database
+	let sql = "SELECT * FROM movies"; //select all moviesd
+	db.query(sql, (err, result, fields) => {
 		if (err) console.log(err);
-		console.log(JSON.stringify(result)); //result is an array of your data you get after a query
-		res.render("movies.ejs", { result }); //, { result }
+		console.log(JSON.stringify(result)); 
+		res.render("movies", { result }); 
 	});
 });
 
-//route that selects movie by id
-app.get("/movies/:id", (req, res) => {
+app.get("/movies/:id", (req, res) => {//route that selects movie by id
 	let sql = `SELECT * FROM movies WHERE movie_id = ${req.params.id}`;
-	let query = db.query(sql, (err, result) => {
-		if (err) throw err;
-		console.log(result);
-		res.render("movies.ejs", { result });
+	//let sql = 'SELECT * FROM movies WHERE movie_id = 1';
+	db.query(sql, (err, result, fields) => {
+		if (err) console.log(err);
+		console.log(JSON.stringify(result));
+		res.render("rate_movie", { result });
 	});
 });
 
 //route that rates the selected movie INSERT RATING
 app.post("/movies/:id/rateMovie", (req, res) => {
-	let sql = "INSERT INTO ratings () ";
+	let sql = `INSERT INTO ratings (movie_id, user_id, rating) VALUES ('${req.params.movie_id}' , '1' , '${req.params.rating}') `;
+
+	db.query(sql, (err, result, fields) =>{
+		console.log(JSON.stringify(result));
+		res.render("movie_reviews", { result });
+	});
 });
+
+//ratings columns
+//rating_id , movie_id, user_id, rating
+
+
 
 //test routes
 app.get("/secret", requireLogin, (req, res) => {
@@ -119,13 +106,11 @@ app.get("/topsecret", requireLogin, (req, res) => {
 	res.send("TOP SECRET!!!");
 });
 
-app.all("*", (req, res) => {
-	//not sure what this does
+app.all("*", (req, res) => {//not sure what this does
 	res.status(404).send("<h1>resource not found</h1>");
 });
 
-app.listen(8080, (err) => {
-	//listens for connections/requests
+app.listen(8080, (err) => {//listens for connections/requests
 	if (err) console.log(err);
 	console.log("Server started on port 8080");
 });

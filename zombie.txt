@@ -22,3 +22,35 @@ http.createServer(function (req, res) {//method, will be executed when someone t
   console.log("The server is running!");
 }).listen(3000);
 */
+
+
+
+/*
+app.post("/login", async (req, res) => {
+      console.log(req.body);
+	//route for login and authentication
+	const { username, password } = req.body;
+
+	//if (username && password) {
+		//let sql = `SELECT * FROM user WHERE username = ? AND password = ?';
+            db.query(`SELECT email FROM user WHERE username = ? AND password = ?`, [username,password ], (error, results) =>{
+                  if(error) {
+                        console.log(error);
+                  } 
+                  if (results.length > 0) {
+                        return res.render('register', {message: 'That email is already in use!'})
+                  } else if( password !== passwordConfirm ) {
+                        return res.render('register', {
+                              message: 'Passwords do not match'
+                        });
+                  };
+            })
+
+		//let query = db.query(sql, (err, result) => {
+			//if (err) throw err;
+			//console.log(result);
+			//res.render("movies.ejs", { result });
+		//});
+	//}
+//});
+*/

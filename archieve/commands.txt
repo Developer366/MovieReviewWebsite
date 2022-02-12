@@ -1,0 +1,4 @@
+node server.js
+
+npm install nodemon
+nodemon server.js

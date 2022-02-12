@@ -1,0 +1,8 @@
+const { movie_rating  } = req.body;//gets rating from form from template
+
+${req.params.id} //gets the id from the route 
+
+let sql = `INSERT INTO ratings (movie_id, user_id, rating) VALUES ('${req.params.id}' , '1' , '${movie_rating}')`;  //missing a tick at movie_rating
+
+[make sure that the form action begins with a slash and has the correct url]
+ <form id="form" action="/movies/search" method="get">

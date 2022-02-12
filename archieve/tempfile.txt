@@ -1,0 +1,18 @@
+Server started on port 8080 [http://localhost:8080/]
+Database successfully Connected!! =)
+GET / 304 10.969 ms - -
+GET /register 200 2.277 ms - 988
+Password is: $2b$12$.Cv0H902/y8pZqxs7rb0qeId5lnzo5EslTmp7UEjcicQNQHIEu83O
+POST /register 302 281.322 ms - 56
+GET /login 304 2.679 ms - -
+Number of records inserted: 1
+OkPacket {
+  fieldCount: 0,
+  affectedRows: 1,
+  insertId: 4,
+  serverStatus: 2,
+  warningCount: 0,
+  message: '',
+  protocol41: true,
+  changedRows: 0
+}

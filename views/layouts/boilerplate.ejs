@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/boilerplate.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../../routes/movie.js" defer></script>
+    <title>Movie App</title>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="/movies">Movies</a></li>
+            <li><a href="#">TV Shows</a></li>
+            <li><a href="#">Anime</a></li>
+
+            <form id="form" action="/movies/search" method="get">
+                <input type="text" name="query" placeholder="Search Movie" id="search" class="search"> 
+            </form>
+
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <%- body %>
+</body>
+
+
+</html>

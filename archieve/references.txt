@@ -1,0 +1,15 @@
+https://stackoverflow.com/questions/18629327/adding-css-file-to-ejs
+
+(sql):
+https://www.w3schools.com/nodejs/nodejs_mysql_insert.asp [insert record with question mark]
+
+https://www.npmjs.com/package/mysql
+
+https://www.w3schools.com/nodejs/nodejs_mysql_select.asp
+
+(exporting database connection to another js file)
+https://stackoverflow.com/questions/30545749/how-to-provide-a-mysql-database-connection-in-single-file-in-nodejs
+
+
+(appending html)
+https://stackoverflow.com/questions/30014090/uncaught-typeerror-cannot-read-property-appendchild-of-null

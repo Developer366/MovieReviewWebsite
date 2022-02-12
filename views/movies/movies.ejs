@@ -1,0 +1,19 @@
+<%- layout('layouts/boilerplate') %>
+
+<h1>Now Playing Movies:</h1>
+
+<div class="grid-container">
+
+        <% data.forEach(function(data) { %> 
+            <a href="https://www.google.com/">
+                <div class="Movie-Card">
+                        <h2>Movie ID: <%= data.id %> </h2>
+                        <h2>Movie title: <%= data.original_title %> </h2>
+                        <img src="<%=IMG_URL%><%=data.poster_path %> ">
+                        Overview: <%= data.overview %>
+                        <h2>Release Date: <%= data.release_date%> </h2>
+                </div>
+            </a>
+        <% }); %>
+
+</div>

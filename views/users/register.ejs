@@ -1,0 +1,23 @@
+<% layout('layouts/userlayout') %>
+
+<h1>Register an Account</h1>
+<div>
+    <form action="/register" method="POST">
+
+        <label for="Name">Name</label>
+        <input type="text" name="name" required>
+
+        <label for="UserName">User Name</label>
+        <input type="text" name="username" required>
+
+        <label for="Password">Password</label>
+        <input type="text" name="password" required>
+
+        <label for="passconfirm">Confirm Password</label>
+        <input type="text" name="passconfirm" required>
+
+        <input type="submit" value="Register">
+        
+    </form>
+    <a href="/login">Click here to Login</a>
+</div>

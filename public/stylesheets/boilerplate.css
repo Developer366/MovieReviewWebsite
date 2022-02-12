@@ -1,0 +1,50 @@
+body {
+    background-color: silver;
+}
+/* navigation bar css */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    text-align:center;
+    background-color: rgb(240, 214, 234);
+    /* display:block; */
+    
+}
+li {
+    display: inline-block;
+    color: white; 
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    /* display: inline; */
+  }
+
+  img {
+    max-width: 90%;
+    height:auto;
+}
+form {
+    display: inline-block;
+}
+  /* css for displaying movie cards  */
+.Movie-Card {
+    background-color:cadetblue;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 20px;
+    cursor: pointer;
+}
+
+.grid-container {
+    display: grid;
+    justify-content: space-evenly;
+    margin-top: 30px;
+	grid-template-columns: repeat(auto-fit, 35rem);
+	grid-gap: 30px;
+	/* justify-content: center; */
+}
+
+

@@ -1,0 +1,19 @@
+<% layout('layouts/userlayout') %>
+
+    <h1>Login</h1>
+
+    <div>
+        <form action="/login" method="POST">
+
+            <label for="username">User Name</label>
+            <input type="text" name="username" required>
+
+            <label for="password">Password</label>
+            <input type="text" name="password" required>
+
+            <input type="submit" value="Login">
+
+        </form>
+        <h2>Don't have an account?</h2>
+        <a href="/register">Click here to Register</a>
+    </div>

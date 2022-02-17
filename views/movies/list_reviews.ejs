@@ -1,11 +1,24 @@
-<% layout('layouts/boilerplate') %>
+<%- layout('layouts/ratelayout') %>
 
-<table> 
-    <tr>
-        <th>Movie</th>
-        <th>Director</th>
-        <th>Rating</th>
-        <th></th>
-    </tr>
+<h1>Your Movie Reviews</h1>
 
-</table>
+<div>
+    <table border='1'>
+        <tr>
+            <th>Movie Title</th>
+            <th>Movie ID</th>
+            <th>Movie Rating</th>
+            <th>Delete</th>
+        </tr>
+
+        <% for(var i=0; i<data.length; i++){ %>
+        <tr>    
+            <td><%= data[i]['movie_title']  %> </td>
+            <td><%= data[i]['movie_id']  %> </td>
+            <td><%= data[i]['rating']%></td>
+            <td><a href="http://stackoverflow.com"><button>Delete</button></a></td>
+        </tr>
+        <% }%>
+
+    </table>
+</div>

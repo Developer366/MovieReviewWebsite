@@ -1,10 +1,10 @@
-var http = require("http"); //now you can create a server
-var mysql = require("mysql"); //now you can connect to mysql
+const http = require("http"); //now you can create a server
+const mysql = require("mysql"); //now you can connect to mysql
 const express = require("express"); //express  faremwork for making routes
 const path = require("path"); //helps create file paths
-let ejs = require("ejs"); //Embedded JavaScript
+const ejs = require("ejs"); //Embedded JavaScript
 const engine = require("ejs-mate"); //layout for ejs files
-let bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt"); //hash your password
 const session = require("express-session");
 const flash = require("connect-flash");
@@ -12,22 +12,21 @@ const passport = require("passport");//user sessions
 const LocalStrategy = require("passport-local");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
+const hbs = require('express-handlebars');
 
-const db = require('./db');//get databse configuration from db.js
-//const hbs = require('express-handlebars');
-
+//importing from other files/folders---------------------------------------------------------
 const movieRoutes = require('./routes/movies'); //get movie router from routes folder
+const db = require('./db');//get databse configuration from db.js
 
+//app uses and sets 
 const app = express(); //Creates Express application
 app.use(express.static(path.join(__dirname, "/public"))); //css path
-
 app.engine("ejs", engine);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/views")); //templates in the view folder
-
 app.use(express.urlencoded({ extended: true })); //middleware for parsing url data
 app.use(express.json());
-app.use(session({ secret: "notagoodsecret" }));
+app.use(session({ secret: "YourSecretsAreSafeWithMe" })); //using user sessions 
 app.use(morgan("dev")); //useful logging tool shows whether get or post method and ms
 
 //app.use(session(sessionConfig));
@@ -42,21 +41,19 @@ app.use((req, res, next) => {
 	next();
 })
 
-//app.engine('view engine', 'hbs'); middleware 
-const requireLogin = (req, res, next) => {
+const requireLogin = (req, res, next) => {//middleware for checking if the route requires a login
 	if (!req.session.user_id) {
 		return res.redirect("/login");
 	}
 	next();
-};
+};//end of require login middleware
 
-//***********LOGIN, Logout AND RESGISETER ROUTES GET AND POST----------------------------
+//********************LOGIN, Logout AND RESGISETER ROUTES GET AND POST
 
 app.get(["/", "/login"], (req, res) => {//two urls work for login
-	//first page you see is the login form
-	// res.render("users/login.ejs");
+	res.render("users/login.ejs");
 	// res.render("movies/movies.ejs")
-	res.redirect("/movies")//***************** For Development purposes change later
+	// res.redirect("/movies")//***************** For Development purposes change later
 });
 
 app.post("/login", async (req, res) => {
@@ -69,6 +66,7 @@ app.post("/login", async (req, res) => {
 		if(err) throw err;
 		console.log(result)
 		let hashPassword = result[0].password;
+		let user = result[0];
 
 		const validPassword = await bcrypt.compare(password, hashPassword );//compare password to databse
 		console.log(hashPassword)
@@ -76,9 +74,10 @@ app.post("/login", async (req, res) => {
 
 		if (validPassword) {
 			if (err) throw err;
-			//req.session.user_id = user._id; //stores user id for the session to stay logged in 
+			req.session.user_id = user.user_id; //stores user id for the session to stay logged in 
 			console.log("password is valid")
 			req.flash('success', 'Successfully Logged In');
+
 			res.redirect('/movies');
 		} else {
 			if (err) throw err;
@@ -108,19 +107,23 @@ app.post("/register", async (req, res) => {
 	res.redirect('/login');
 });
 
-app.post('/logout', (req,res) => {
-	//req.session.user_id = null;
-	//req.session.destroy();
+app.get('/logout', (req,res) => {
+	req.session.user_id = null;
+	req.session.destroy();
 	res.redirect('/login')
 })
 
-
-
+app.use('/movies' ,requireLogin, movieRoutes);//gets movie routes from separate file
 
 //************************test routes---------------------------------------------------------
 app.get("/secret", requireLogin, (req, res) => {
-	res.render("secret");
+	res.send("secret");
 });
+
+app.get("/topsecret", requireLogin, (req, res) => {
+	res.send("TOP SECRET!!!");
+});
+
 app.use((err, req, res, next) => {
 	console.log("***************************");
 	console.log("**********ERROR***********");
@@ -129,19 +132,13 @@ app.use((err, req, res, next) => {
 	next(err);
 });
 
-app.use('/movies' , movieRoutes);
-
-app.get("/topsecret", requireLogin, (req, res) => {
-	res.send("TOP SECRET!!!");
-});
-
 app.all("*", (req, res) => {
 	//not sure what this does
-	res.status(404).send("<h1>resource not found</h1>");
+	res.status(404).send("<h1>resource not found =(</h1>");
 }); //when no routes match
 
 app.listen(8080, (err) => {
 	//listens for connections/requests
 	if (err) console.log(err);
 	console.log("Server started on port 8080 [http://localhost:8080/]");
-});
+});//running the server route port 8080

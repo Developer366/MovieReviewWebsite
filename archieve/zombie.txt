@@ -92,4 +92,71 @@ app.post("/login", async (req, res) => {
 		console.log(JSON.stringify(result));
 		showMovies();
 		res.render("movies/movies.ejs", { result });
+// 	});
+
+
+
+      router.get("/:id", (req, res) => {
+	//route that selects movie by id
+	let sql = `SELECT * FROM movies WHERE movie_id = ${req.params.id}`;
+	//let sql = 'SELECT * FROM movies WHERE movie_id = 1';
+	db.query(sql, (err, result, fields) => {
+		if (err) console.log(err);
+		console.log(JSON.stringify(result));
+		res.render("movies/rate_movie", { result });
+
+		async function showMovies() {
+			//home page for movies when you Login
+			let url = "".concat(
+				BASE_URL,
+				"movie/now_playing?api_key=",
+				API_KEY,
+				"&language=en-US&page=1"
+			);
+			let response = await fetch(url);
+			let data = await response.json();
+
+			console.log(data);
+			console.log(data.results); //get the results from fetch
+			let movies = data.results;
+
+			movies.forEach((movie) => {
+				const { title, poster_path, vote_average, overview } = movie;
+				const movieCard = document.createElement("div");
+				movieCard.innerHTML = `
+				<div>
+					<h3>${title} </h3>
+					<img src="${IMG_URL + poster_path}" alt="${title}" >
+					<h2>${vote_average}</h2>
+				</div>
+				`;
+				output.appendChild(movieCard);
+			});
+		} //end of shownowPLaying movies
 	});
+});
+
+let sql = "SELECT * FROM ratings";
+
+		db.query(sql, (err, result, fields) => {
+			if (err) console.log(err);
+			console.log(JSON.stringify(result));
+			res.render("movies/movie_reviews", { result });
+		});
+
+
+
+
+
+
+    <% data.forEach(function(data) { %> 
+        <a href="/movies/<%=data.id%> ">
+            <div class="Movie-Card">
+                    <h2>Movie title: <%= data.original_title %> </h2>
+                    <h2>Movie ID: <%= data.id %> </h2>
+                    <img src="<%=IMG_URL%><%=data.poster_path %>">
+                    Overview: <%= data.overview %>
+                    <h2>Release Date: <%= data.release_date%> </h2>
+            </div>
+        </a>
+    <% }); %>

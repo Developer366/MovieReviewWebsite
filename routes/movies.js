@@ -54,70 +54,67 @@ router.get('/search', (req, res) => {
 	  })
 })//end of search movie route
 
+router.get('/ListMovieReviews', (req, res) => {
+	let sql = "SELECT * FROM movie_rating where user_id = (?)";
+
+	db.query(sql, [req.session.user_id], (err, result, fields) => {
+		if (err) console.log(err);
+		console.log(result)
+		let data = result;
+		console.log(result)
+		res.render('movies/list_reviews', {data: data});
+	});
+	
+	// res.render("HI mate");
+}); //end of get List of Movie Reviews from user
+
 // https://api.themoviedb.org/3/search/movie?api_key=56de9db363183b7eef149e09a75ffc8a&language=en-US&query=avengers&page=1&include_adult=false
 
 //get specific movie to rate
-router.get("/:id", (req, res) => {
-	//route that selects movie by id
-	let sql = `SELECT * FROM movies WHERE movie_id = ${req.params.id}`;
-	//let sql = 'SELECT * FROM movies WHERE movie_id = 1';
-	db.query(sql, (err, result, fields) => {
-		if (err) console.log(err);
-		console.log(JSON.stringify(result));
-		res.render("movies/rate_movie", { result });
-
-		async function showMovies() {
-			//home page for movies when you Login
-			let url = "".concat(
-				BASE_URL,
-				"movie/now_playing?api_key=",
-				API_KEY,
-				"&language=en-US&page=1"
-			);
-			let response = await fetch(url);
-			let data = await response.json();
-
-			console.log(data);
-			console.log(data.results); //get the results from fetch
-			let movies = data.results;
-
-			movies.forEach((movie) => {
-				const { title, poster_path, vote_average, overview } = movie;
-				const movieCard = document.createElement("div");
-				movieCard.innerHTML = `
-				<div>
-					<h3>${title} </h3>
-					<img src="${IMG_URL + poster_path}" alt="${title}" >
-					<h2>${vote_average}</h2>
-				</div>
-				`;
-				output.appendChild(movieCard);
-			});
-		} //end of shownowPLaying movies
-	});
-});
+router.get('/:id', (req, res) => {
+	const { id } = req.params;
+	console.log(id)
+	let url = "".concat(BASE_URL, "movie/", id, "?api_key=", API_KEY, "&language=en-US")
+	console.log(url)
+	//https://api.themoviedb.org/3/movie/33?api_key=56de9db363183b7eef149e09a75ffc8a&language=en-US
+	//https://api.themoviedb.org/3/movie33?api_key=56de9db363183b7eef149e09a75ffc8a&language=en-US
+	axios.get(url)
+	.then(response => {
+		let data = response.data;
+		console.log(data)
+		res.render('movies/rate_movie', { 
+			data : data,
+			IMG_URL: IMG_URL })
+	})
+	.catch(function (error) {
+		console.log(error);
+	})
+})// end of route that gets one movie to make a review
 
 //submit the rating for the movie
-router.post("/:id/rateMovie", (req, res) => {
+router.post("/:id/:title", (req, res) => {//   "/":id/rateMovie"
 	//route that rates the selected movie INSERT RATING
+	const { id } = req.params;
+	const { title } = req.params;
 	const { movie_rating } = req.body; //gets rating from form from template
+	// let sql = `INSERT INTO movie_rating (movie_id, user_id, rating) VALUES ('${req.params.id}' , '1' , '${movie_rating}')`; //demo purposes user Id is 1
+	// let sql = `INSERT INTO movie_rating (user_id, movie_id, movie_title, rating) VALUES ('1', '565', 'Inception', '9.5')`;
+	// let sql = `INSERT INTO movie_rating (user_id, movie_id, movie_title, rating) VALUES ('${req.session.user_id}', '${id}', '${title}', '${movie_rating}')`;
+	let sql = "INSERT INTO movie_rating (user_id, movie_id, movie_title, rating) VALUES (?,?,?,?)";
 
-	let sql = `INSERT INTO ratings (movie_id, user_id, rating) VALUES ('${req.params.id}' , '1' , '${movie_rating}')`; //demo purposes user Id is 1
-
-	db.query(sql, (err, result, fields) => {
+	db.query(sql, [req.session.user_id, id, title, movie_rating], (err, result, fields) => {
 		if (err) console.log(err);
-		console.log(JSON.stringify(result));
-
-		let sql = "SELECT * FROM ratings";
-
-		db.query(sql, (err, result, fields) => {
-			if (err) console.log(err);
-			console.log(JSON.stringify(result));
-			res.render("movies/movie_reviews", { result });
-		});
+		//console.log(JSON.stringify(result));
+		console.log(sql)
+		console.log("Inserted rating into database =) redirecting now")
+		
 	});
+	res.redirect('/movies/ListMovieReviews');
 });
 
-router.get("listMovies", (req, res) => {});
+router.delete('/:id', (req, res) => {
+	
+})
+
 
 module.exports = router;

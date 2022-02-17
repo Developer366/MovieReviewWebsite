@@ -13,3 +13,9 @@ https://stackoverflow.com/questions/30545749/how-to-provide-a-mysql-database-con
 
 (appending html)
 https://stackoverflow.com/questions/30014090/uncaught-typeerror-cannot-read-property-appendchild-of-null
+
+(sql error with foreign key check)
+https://sebhastian.com/mysql-error-1452/
+
+(dynamic urls apis first)
+https://stackoverflow.com/questions/31493190/express-parameterized-route-conflict

@@ -13,20 +13,7 @@
 </head>
 
 <body>
-    <nav>
-        <ul>
-            <li><a href="/movies">Movies</a></li>
-            <li><a href="#">TV Shows</a></li>
-            <li><a href="#">Anime</a></li>
-
-            <form id="form" action="/movies/search" method="get">
-                <input type="text" name="query" placeholder="Search Movie" id="search" class="search"> 
-            </form>
-
-            <li><a href="/logout">Logout</a></li>
-        </ul>
-    </nav>
-
+    <%- include('../partials/NavBar')%>
     <%- body %>
 </body>
 

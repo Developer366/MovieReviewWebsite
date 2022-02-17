@@ -1,43 +1,70 @@
-body {
-    background-color: silver;
+body, html {
+    background-color: rgb(41, 165, 159);
+    /* background-color: rgb(195, 89, 89); */
+    margin: 0px;
 }
 /* navigation bar css */
+h1 {
+    text-align: center;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+h2 {
+    color: white;
+}
 ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    text-align:center;
-    background-color: rgb(240, 214, 234);
+    text-align: center;
+    background-color: rgb(12, 60, 151);
     /* display:block; */
-    
 }
 li {
+    font-size: 2rem;
     display: inline-block;
-    color: white; 
+    color: rgb(255, 255, 255); 
     text-align: center;
-    padding: 14px 16px;
+    padding: 22px;
+    /* margin: 16px; */
     text-decoration: none;
     /* display: inline; */
-  }
-
-  img {
-    max-width: 90%;
+}
+li:hover {
+    background-color:rgb(84, 179, 241);
+}
+a, a:visited, a:hover, a:active {
+    color: inherit;
+    text-decoration: none;
+    display:block;
+}
+img {
+    max-width: 70%;
     height:auto;
 }
 form {
     display: inline-block;
+    padding: 12px 20px;
 }
-  /* css for displaying movie cards  */
+input ,input[type = text] {
+    padding: 10px 10px;
+    font-size: 1.5rem;
+    text-align: center;
+    /* color: red; */
+}
+::placeholder {
+    color: rgb(93, 90, 90);
+}
+/* css for displaying movie cards  */
 .Movie-Card {
-    background-color:cadetblue;
+    background-color: rgb(12, 60, 151);
     overflow: hidden;
     text-align: center;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    padding: 20px;
+    padding: 5px;
     cursor: pointer;
+    /* width:50%; */
 }
-
 .grid-container {
     display: grid;
     justify-content: space-evenly;

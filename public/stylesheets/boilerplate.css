@@ -7,6 +7,7 @@ body, html {
 h1 {
     text-align: center;
     font-family: "Lucida Console", "Courier New", monospace;
+    color: white;
 }
 h2 {
     color: white;
@@ -73,5 +74,16 @@ input ,input[type = text] {
 	grid-gap: 30px;
 	/* justify-content: center; */
 }
-
+.success {
+    padding: 5px;
+    background-color: green;
+    color:aquamarine;
+    font-size: 1.5rem;
+}
+.error {
+    padding: 5px;
+    background-color: red;
+    color: black;
+    font-size: 1.5rem;
+}
 

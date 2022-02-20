@@ -35,7 +35,7 @@ app.use(passport.session());
 //passport.use(new LocalStrategy)
 app.use(flash());
 
-app.use((req, res, next) => {
+app.use((req, res, next) => {//flash middleware
 	res.locals.success = req.flash('success');
 	res.locals.error = req.flash('error');
 	next();
@@ -58,56 +58,75 @@ app.get(["/", "/login"], (req, res) => {//two urls work for login
 
 app.post("/login", async (req, res) => {
 	const { username, password } = req.body;//get form data 
-	//console.log("Password is: " +password +" ,, " + hashPassword)
-	//let sql = "SELECT * FROM user where username = ? and password = ?";
-	let sql = "SELECT * FROM user where username = ?";
+	let sql = "SELECT * FROM user where username = ?"; //find specific user 
 
 	db.query(sql, [username], async function  (err, result){//look for username 
-		if(err) throw err;
-		console.log(result)
-		let hashPassword = result[0].password;
-		let user = result[0];
+		if (result.length == 0) { //username does not exist error
+			console.log("Username does not exist")
+			req.flash('error', 'Username does not exist');
+			res.redirect('/login');
+		} else {//username exists
+			if(err) throw err;
+			console.log(result)
+			let hashPassword = result[0].password;
+			let user = result[0];
+			//compare password to databse (next line)
+			const validPassword = await bcrypt.compare(password, hashPassword );
+			console.log(hashPassword)
+			console.log(validPassword)
 
-		const validPassword = await bcrypt.compare(password, hashPassword );//compare password to databse
-		console.log(hashPassword)
-		console.log(validPassword)
-
-		if (validPassword) {
-			if (err) throw err;
-			req.session.user_id = user.user_id; //stores user id for the session to stay logged in 
-			console.log("password is valid")
-			req.flash('success', 'Successfully Logged In');
-
-			res.redirect('/movies');
-		} else {
-			if (err) throw err;
-			console.log("Try Again")
-			res.redirect('/login')
-			//res.render("Error logging in to account")
-		}
-	})//end of sql query 
-
+			if (validPassword) { //check if username's password same as hashed password 
+				if (err) throw err;
+				req.session.user_id = user.user_id; //stores user id for the session to stay logged in 
+				console.log("username and password is valid")
+				req.flash('success', 'Successfully Logged In');
+				res.redirect('/movies');//login and show list of movies 
+			} else { // password invalid throw error
+				if (err) throw err;
+				console.log("Invalid username and password")
+				req.flash('error', 'Invalid username or password');
+				res.redirect('/login')
+			}
+		}//end of else statement if username exists
+	});//end of sql query 
 });// end of login route
 	
 app.get("/register", async (req, res) => {
 	res.render("users/register");
 });
 
-app.post("/register", async (req, res) => {
-	const { name, username, password } = req.body;
+app.post("/register",async (req, res) => {//check entered data and see if user exists
+	const { name, username, password, passconfirm } = req.body;
 	const hash = await bcrypt.hash(password, 12);
 	console.log("Password is: " + hash)
-	var sql = "INSERT INTO user (name, username, password) VALUES (?,?,?)";
+	
+	var sql_SEARCH = "SELECT * FROM user WHERE username = ?";
+	var sql_INSERT = "INSERT INTO user (name, username, password) VALUES (?,?,?)";
 
-	db.query(sql, [name, username, hash], function(err, result) {
-		if (err) throw err;
-		console.log("Number of records inserted: " + result.affectedRows);
-		console.log(result)
-	})
-	res.redirect('/login');
-});
+	if (password == passconfirm) {// if all fields are filled in form
+		db.query(sql_SEARCH, [username], function(err, result){// search if user exists
+			if (err) throw err;
+			if (result.length >0 ) {//username already exists
+				req.flash('error', 'Username already exists');
+				res.render('users/register.ejs');//re-render the register page
+			} else {
+				db.query(sql_INSERT, [name, username, hash], function(err, result) {//create new user
+					if (err) throw err;
+					console.log("Number of records inserted: " + result.affectedRows);
+					console.log(result)
+					res.redirect('/login');
+				});//end of query insert new user
+			}
+		});//end of searching for if user exists 
+	} else {
+		console.log("the password and confirm do not match up")
+		req.flash('error', 'the passwords are not the same');
+		res.render('users/register.ejs');//re-render the register page
+	}
+});//end of register route 
 
 app.get('/logout', (req,res) => {
+	req.flash('success', 'Successfully logged out!');
 	req.session.user_id = null;
 	req.session.destroy();
 	res.redirect('/login')

@@ -55,7 +55,7 @@ router.get('/search', (req, res) => {
 })//end of search movie route
 
 router.get('/ListMovieReviews', (req, res) => {
-	let sql = "SELECT * FROM movie_rating where user_id = (?)";
+	let sql = "SELECT * FROM movie_rating where user_id = (?) ORDER BY rating DESC";
 
 	db.query(sql, [req.session.user_id], (err, result, fields) => {
 		if (err) console.log(err);
@@ -67,6 +67,21 @@ router.get('/ListMovieReviews', (req, res) => {
 	
 	// res.render("HI mate");
 }); //end of get List of Movie Reviews from user
+
+router.get('/delete/:RatingID', (req, res) => {
+	const { RatingID } = req.params;
+	let sql = "DELETE FROM movie_rating WHERE user_id = ? AND rating_id = ?";
+	console.log(RatingID + "," + sql)
+
+	db.query(sql, [req.session.user_id, RatingID], (err, result, fields) => {
+		if (err) console.log(err);
+		console.log(sql)
+		console.log("deleted movie_rating from database =) redirecting now")
+		
+	});
+	req.flash('success', 'Successfully deleted movie rating')
+	res.redirect('/movies/ListMovieReviews');
+});
 
 // https://api.themoviedb.org/3/search/movie?api_key=56de9db363183b7eef149e09a75ffc8a&language=en-US&query=avengers&page=1&include_adult=false
 
@@ -97,24 +112,29 @@ router.post("/:id/:title", (req, res) => {//   "/":id/rateMovie"
 	const { id } = req.params;
 	const { title } = req.params;
 	const { movie_rating } = req.body; //gets rating from form from template
-	// let sql = `INSERT INTO movie_rating (movie_id, user_id, rating) VALUES ('${req.params.id}' , '1' , '${movie_rating}')`; //demo purposes user Id is 1
-	// let sql = `INSERT INTO movie_rating (user_id, movie_id, movie_title, rating) VALUES ('1', '565', 'Inception', '9.5')`;
-	// let sql = `INSERT INTO movie_rating (user_id, movie_id, movie_title, rating) VALUES ('${req.session.user_id}', '${id}', '${title}', '${movie_rating}')`;
-	let sql = "INSERT INTO movie_rating (user_id, movie_id, movie_title, rating) VALUES (?,?,?,?)";
-
-	db.query(sql, [req.session.user_id, id, title, movie_rating], (err, result, fields) => {
-		if (err) console.log(err);
-		//console.log(JSON.stringify(result));
-		console.log(sql)
-		console.log("Inserted rating into database =) redirecting now")
-		
-	});
-	res.redirect('/movies/ListMovieReviews');
-});
-
-router.delete('/:id', (req, res) => {
 	
-})
+	//search user id and movie_id to check for duplicates 
+	let sql_SEARCH ="SELECT * FROM movie_rating where user_id = (?) AND movie_id = (?)"; 
+	let sql_INSERT = "INSERT INTO movie_rating (user_id, movie_id, movie_title, rating) VALUES (?,?,?,?)";
+
+	db.query(sql_SEARCH, [req.session.user_id, id], (err, result, fields) =>{// search for user_id and movie_id
+		if (result.length > 0) {//if there is 1 or more movie reviews 
+			console.log(sql_SEARCH)
+			req.flash('error', 'Movie Review Already exists!');
+			//res.render('movies/rate_movie');
+			// let url = "/movies/${}"
+			res.redirect(`/movies/${id}`);
+		} else {
+			db.query(sql_INSERT, [req.session.user_id, id, title, movie_rating], (err, result, fields) =>{
+				if (err) console.log(err);
+				console.log(sql_INSERT)
+				console.log("Inserted rating into database =) redirecting now")
+			});
+			req.flash('success', 'Added a new movie review!');
+			res.redirect('/movies/ListMovieReviews');
+		}// end of else (result length not more than zero (0 or below))
+	}) //end of search movie_rating query
+});//end of post movie review route 
 
 
 module.exports = router;

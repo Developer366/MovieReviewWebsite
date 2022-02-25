@@ -156,7 +156,7 @@ app.all("*", (req, res) => {
 	res.status(404).send("<h1>resource not found =(</h1>");
 }); //when no routes match
 
-const port = process.env.port || 8080; //checks environment port then defailts to 8080
+const port = process.env.PORT || 8080; //checks environment port then defailts to 8080
 app.listen(port, (err) => {
 	//listens for connections/requests
 	if (err) console.log(err);

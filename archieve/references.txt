@@ -19,3 +19,6 @@ https://sebhastian.com/mysql-error-1452/
 
 (dynamic urls apis first)
 https://stackoverflow.com/questions/31493190/express-parameterized-route-conflict
+
+(connect app to aws database)
+https://www.youtube.com/watch?v=6Nt-Jl3CzxE

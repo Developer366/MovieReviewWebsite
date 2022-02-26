@@ -4,7 +4,7 @@
   "description": "movie review app with nodejs and mysql",
   "main": "server.js",
   "engines": {
-    "node": "14.0.0"
+    "node": "16.13.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,6 +15,7 @@
   "dependencies": {
     "axios": "^0.25.0",
     "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
     "cross-fetch": "^3.1.5",
@@ -24,6 +25,7 @@
     "express": "^4.17.1",
     "express-handlebars": "^5.3.3",
     "express-session": "^1.17.2",
+    "firebase": "^9.6.7",
     "flash": "^1.1.0",
     "handlebars": "^4.7.7",
     "morgan": "^1.10.0",
